@@ -12,6 +12,6 @@ gulp.task('watch', () => {
 });
 
 gulp.task('default', gulp.series(
-    'sass',
-    'watch'
+  'sass',
+  'watch',
 ));
