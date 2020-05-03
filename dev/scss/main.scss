@@ -1,0 +1,124 @@
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 20px calc(50% - 500px);
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.4;
+    font-family: 'Roboto', sans-serif;
+    color: #212121;
+    background-color: #e0f7fa;
+}
+
+.textarea {
+    width: 100%;
+    height: 300px;
+    margin-bottom: 20px;
+    font-size: 20px;
+    border: 2px solid #ef5350;
+    resize: none;
+}
+
+.keyboard {
+    margin-bottom: 20px;
+    padding: 10px;
+    font-weight: 500;
+    border: 2px solid #212121;
+    border-radius: 8px;
+    background-color: #424242;
+    &_row {
+        display: flex;
+        justify-content: space-between;
+        &:last-child {
+            .keyboard_item {
+                margin-bottom: 0;
+            }
+        }
+    }
+    &_item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+        background-color: #bdbdbd;
+        cursor: pointer;
+        transition: all 0.4s;
+        &.general {
+            background-color: #ff7676;
+        }
+        &.backspace, &.capsLock, &.ShiftLeft {
+            width: 135px;
+        }
+        &.del, &.tab {
+            width: 60px;
+        }
+        &.enter, &.ShiftRight {
+            width: 115px;
+        }
+        &.space {
+            width: 460px;
+        }
+        &:hover {
+            background-color: #4fc3f7;
+        }
+        &.active {
+            background-color: #4fc3f7;
+            border-radius: 50px;
+            box-shadow: 0 0 30px rgba(#4fc3f7, 0.6);
+        }
+        span {
+            display: none;
+            &.general, &.arrow {
+                display: block;
+            }
+        }
+    }
+    &.ru {
+        .ru {
+            display: block;
+        }
+        &.up {
+            .ru {
+                display: none;
+            }
+            .ruUp {
+                display: block;
+            }
+        }
+    }
+    &.en {
+        .en {
+            display: block;
+        }
+        &.up {
+            .en {
+                display: none;
+            }
+            .enUp {
+                display: block;
+            }
+        }
+    }
+}
+
+.text {
+    margin-bottom: 20px;
+    text-align: center;
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
