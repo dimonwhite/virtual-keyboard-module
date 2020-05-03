@@ -1,18 +1,15 @@
-import keyboard from "./keys";
+import keyboard from './keys';
 
-class Keyboard {
-  constructor(keys) {
-    this.keys = keys;
+export default class Keyboard {
+  constructor(block, input) {
+    this.keys = keyboard;
+    this.wrapBlock = block;
     this.language = sessionStorage.getItem('language') ? sessionStorage.getItem('language') : 'ru';
-    this.body = document.querySelector('body');
     this.keyboardBlock = document.createElement('div');
-    this.textarea = document.createElement('textarea');
-    this.textLanguage = document.createElement('div');
-    this.textWin = document.createElement('div');
+    this.textarea = input;
     this.up = false;
     this.shiftDown = false;
     this.capsDown = false;
-    this.languageDown = false;
     this.textareaSelection = 0;
   }
 
@@ -42,6 +39,7 @@ class Keyboard {
         break;
       case 'delete':
         this.textareaSelection = this.textarea.selectionStart;
+        console.log(this.textareaSelection);
         start = this.textarea.value.slice(0, this.textareaSelection);
         end = this.textarea.value.slice(this.textareaSelection + 1);
         this.textarea.value = start + end;
@@ -73,88 +71,6 @@ class Keyboard {
     }
   }
 
-  keydown(e) {
-    e.preventDefault();
-    const btn = this.keyboardBlock.querySelector(`.${e.code}`);
-
-    if (btn) {
-      if (e.code !== 'CapsLock') {
-        btn.classList.add('active');
-      }
-      if (btn.classList.contains('general')) {
-        switch (e.code) {
-          case 'ControlLeft':
-          case 'ControlRight':
-            if (e.ctrlKey === true && e.shiftKey === true && !this.languageDown) {
-              this.languageDown = true;
-              this.toggleLanguage();
-            }
-            break;
-          case 'Backspace':
-            this.editText('backspace');
-            break;
-          case 'Delete':
-            this.editText('delete');
-            break;
-          case 'Tab':
-            this.editText('tab');
-            break;
-          case 'Enter':
-            this.editText('text', '\n');
-            break;
-          case 'CapsLock':
-            if (!this.capsDown) {
-              this.capsDown = true;
-              btn.classList.toggle('active');
-              this.toggleUp();
-            }
-            break;
-          case 'ShiftLeft':
-          case 'ShiftRight':
-            if (!this.shiftDown) {
-              this.shiftDown = true;
-              this.toggleUp();
-            }
-            if (e.ctrlKey === true && e.shiftKey === true && !this.languageDown) {
-              this.languageDown = true;
-              this.toggleLanguage();
-            }
-            break;
-          default:
-            break;
-        }
-        return;
-      }
-      this.editText('text', btn.innerText);
-    }
-  }
-
-  keyup(e) {
-    e.preventDefault();
-    const btn = this.keyboardBlock.querySelector(`.${e.code}`);
-    if (btn) {
-      switch (e.code) {
-        case 'ControlLeft':
-        case 'ControlRight':
-          btn.classList.remove('active');
-          this.languageDown = false;
-          break;
-        case 'CapsLock':
-          this.capsDown = false;
-          break;
-        case 'ShiftLeft':
-        case 'ShiftRight':
-          btn.classList.remove('active');
-          this.shiftDown = false;
-          this.toggleUp();
-          break;
-        default:
-          btn.classList.remove('active');
-          break;
-      }
-    }
-  }
-
   mousedown(e) {
     e.preventDefault();
     const btn = e.target.closest('.keyboard_item');
@@ -174,16 +90,33 @@ class Keyboard {
             this.editText('tab');
             break;
           case btn.classList.contains('Enter'):
-            this.editText('text', '\n');
+            this.textarea.closest('form').submit();
             break;
           case btn.classList.contains('CapsLock'):
             this.capsDown = true;
             btn.classList.toggle('active');
             this.toggleUp();
             break;
+          case btn.classList.contains('language'):
+            this.toggleLanguage();
+            break;
           case btn.classList.contains('ShiftLeft'):
           case btn.classList.contains('ShiftRight'):
             this.toggleUp();
+            break;
+          case btn.classList.contains('ArrowUp'):
+            this.setSelection(0);
+            break;
+          case btn.classList.contains('ArrowDown'):
+            this.setSelection(this.textarea.value.length);
+            break;
+          case btn.classList.contains('ArrowLeft'):
+            this.setSelection(this.textarea.selectionStart > 0
+              ? this.textarea.selectionStart - 1
+              : 0);
+            break;
+          case btn.classList.contains('ArrowRight'):
+            this.setSelection(this.textarea.selectionStart + 1);
             break;
           default:
             break;
@@ -192,6 +125,10 @@ class Keyboard {
       }
       this.editText('text', btn.innerText);
     }
+  }
+
+  setSelection(position) {
+    this.textarea.setSelectionRange(position, position);
   }
 
   removeActiveClass(e) {
@@ -207,17 +144,8 @@ class Keyboard {
   }
 
   init() {
-    this.textLanguage.classList.add('text');
-    this.textLanguage.innerText = 'Клавиатура создана в операционной системе Windows';
-    this.textWin.classList.add('text');
-    this.textWin.innerText = 'Для переключения языка используйте комбинацию ctrl + shift';
-
     this.keyboardBlock.classList.add('keyboard', this.language);
-    this.textarea.classList.add('textarea');
-    this.body.append(this.textarea);
-    this.body.append(this.keyboardBlock);
-    this.body.append(this.textLanguage);
-    this.body.append(this.textWin);
+    this.wrapBlock.append(this.keyboardBlock);
 
     this.keys.forEach((row) => {
       const rowElement = document.createElement('div');
@@ -239,14 +167,6 @@ class Keyboard {
       this.keyboardBlock.append(rowElement);
     });
 
-    document.addEventListener('keydown', (e) => {
-      this.keydown(e);
-    });
-
-    document.addEventListener('keyup', (e) => {
-      this.keyup(e);
-    });
-
     this.keyboardBlock.addEventListener('mousedown', (e) => {
       this.mousedown(e);
     });
@@ -258,7 +178,3 @@ class Keyboard {
     this.saveLanguage();
   }
 }
-
-const virtualKeyboard = new Keyboard(keyboard);
-
-virtualKeyboard.init();

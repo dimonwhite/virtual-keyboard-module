@@ -527,10 +527,10 @@ const keyboard = [
     {
       key: '38',
       text: {
-        arrow: '↑',
+        general: '↑',
       },
       code: 'ArrowUp',
-      class: ['arrowUp'],
+      class: ['general', 'arrow'],
     },
     {
       key: '38',
@@ -553,10 +553,10 @@ const keyboard = [
     {
       key: '91',
       text: {
-        general: 'Win',
+        general: 'RU-EN',
       },
       code: 'MetaLeft',
-      class: ['general', 'win'],
+      class: ['general', 'language'],
     },
     {
       key: '18',
@@ -588,23 +588,23 @@ const keyboard = [
         general: '←',
       },
       code: 'ArrowLeft',
-      class: ['arrowLeft'],
+      class: ['general', 'arrow'],
     },
     {
       key: '40',
       text: {
-        arrow: '↓',
+        general: '↓',
       },
       code: 'ArrowDown',
-      class: ['arrowDown'],
+      class: ['general', 'arrow'],
     },
     {
       key: '39',
       text: {
-        arrow: '→',
+        general: '→',
       },
       code: 'ArrowRight',
-      class: ['arrowRight'],
+      class: ['general', 'arrow'],
     },
     {
       key: '17',
