@@ -39,7 +39,6 @@ export default class Keyboard {
         break;
       case 'delete':
         this.textareaSelection = this.textarea.selectionStart;
-        console.log(this.textareaSelection);
         start = this.textarea.value.slice(0, this.textareaSelection);
         end = this.textarea.value.slice(this.textareaSelection + 1);
         this.textarea.value = start + end;
@@ -90,7 +89,7 @@ export default class Keyboard {
             this.editText('tab');
             break;
           case btn.classList.contains('Enter'):
-            this.textarea.closest('form').submit();
+            this.textarea.closest('form').requestSubmit();
             break;
           case btn.classList.contains('CapsLock'):
             this.capsDown = true;
